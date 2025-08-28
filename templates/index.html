@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crop Recommendation Based on Weather</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        /* General Body Styles */
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            color: #333;
+            text-align: center;
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4, #fbc2eb);
+            overflow-x: hidden;
+            animation: gradientBackground 8s infinite alternate;
+        }
+
+        @keyframes gradientBackground {
+            0% {
+                background: linear-gradient(135deg, #ff9a9e, #fad0c4, #fbc2eb);
+            }
+            100% {
+                background: linear-gradient(135deg, #a1c4fd, #c2e9fb, #d4fc79);
+            }
+        }
+
+        /* Header */
+        header {
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 3rem;
+        }
+
+        /* Form */
+        form {
+            margin: 30px auto;
+            max-width: 600px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        input[type="text"] {
+            width: 80%;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+        }
+
+        button {
+            padding: 12px 25px;
+            background: linear-gradient(135deg, #ff7f50, #f7931e);
+            border: none;
+            border-radius: 50px;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s, background 0.3s;
+        }
+
+        button:hover {
+            transform: scale(1.1);
+            background: linear-gradient(135deg, #f7931e, #ff7f50);
+        }
+
+        /* Sections */
+        section {
+            margin: 30px auto;
+            max-width: 1000px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 1.1rem;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background: linear-gradient(135deg, #ff7f50, #f7931e);
+            color: white;
+        }
+
+        /* Save Button */
+        .save-btn {
+            margin: 20px;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #4caf50, #45a049);
+            border: none;
+            border-radius: 50px;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s, background 0.3s;
+        }
+
+        .save-btn:hover {
+            transform: scale(1.1);
+            background: linear-gradient(135deg, #45a049, #4caf50);
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 20px;
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 15px 0;
+            font-size: 1rem;
+            box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Background Animation */
+        .background-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .background-animation div {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            animation: move 25s infinite;
+        }
+
+        @keyframes move {
+            0% {
+                transform: translateY(0) translateX(0);
+            }
+            50% {
+                transform: translateY(600px) translateX(500px);
+            }
+            100% {
+                transform: translateY(0) translateX(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Crop Recommendation System</h1>
+    </header>
+
+    <form method="POST">
+        <input type="text" id="location" name="location" placeholder="Enter location (city or coordinates)" required>
+        <button type="submit">Get Recommendations</button>
+    </form>
+    
+    <section>
+        {% if weather_data %}
+        <h2>Weather Data</h2>
+        <table>
+            <tr>
+                <th>Date</th>
+                <th>Temperature (°C)</th>
+                <th>Humidity (%)</th>
+                <th>Weather</th>
+            </tr>
+            {% for day in weather_data %}
+            <tr>
+                <td>{{ day.date }}</td>
+                <td>{{ day.temperature }}</td>
+                <td>{{ day.humidity }}</td>
+                <td>{{ day.weather }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% endif %}
+    </section>
+    
+    <section>
+        {% if recommended_crops %}
+        <h2>Recommended Crops</h2>
+        <table>
+            <tr>
+                <th>Crop</th>
+            </tr>
+            {% for crop in recommended_crops %}
+            <tr>
+                <td>{{ crop }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        <button class="save-btn" onclick="saveData()">Save Recommendations</button>
+        {% endif %}
+    </section>
+
+    <footer>
+        <p>&copy; 2024 Crop Recommendation System | Powered by Weather Intelligence</p>
+    </footer>
+
+    <div class="background-animation">
+        <div style="width: 100px; height: 100px; top: 5%; left: 15%;"></div>
+        <div style="width: 80px; height: 80px; top: 25%; left: 50%;"></div>
+        <div style="width: 120px; height: 120px; top: 60%; left: 75%;"></div>
+        <div style="width: 60px; height: 60px; top: 80%; left: 20%;"></div>
+    </div>
+
+    <script>
+        function saveData() {
+            const tableData = document.querySelectorAll('table');
+            let data = '';
+            tableData.forEach(table => data += table.outerHTML);
+            const blob = new Blob([data], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'crop_recommendation.html';
+            link.click();
+        }
+    </script>
+</body>
+</html>
